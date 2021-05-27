@@ -50,7 +50,8 @@ class ImgToPdf:
     def change_pdf(self):
         pdf_name = self.pdf_name_enrty.get() + ".pdf"
         pdf_folder = filedialog.askdirectory() + "/"
-        tools.imgToPdf.ImgToPdf(self.filenames, pdf_folder, pdf_name)
+        for i in tools.imgToPdf.ImgToPdf(self.filenames, pdf_folder, pdf_name):
+            print(i)
 
         self.clear_imgpath()
 
