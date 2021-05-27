@@ -1,6 +1,7 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter import filedialog, messagebox
+import tools
 
 class ImgToPdf:
     def __init__(self):
@@ -23,10 +24,12 @@ class ImgToPdf:
 
         self.img_label.pack()
 
-        #次ここから
-        self.pdf_name_enrty = tk.Entry(width=20)
-        self.pdf_name_enrty.insert(tk.END,'pdfの名前を入力して下さい')
-        #self.pdf_name_enrty.pack()
+        self.pdf_name_enrty = tk.Entry(self.frame_imgToPdf)
+        self.pdf_name_enrty.insert(tk.END,'pdfの名前を入力')
+        self.pdf_name_enrty.pack()
+
+        button_change_pdf_frame_imgToPdf = ttk.Button(self.frame_imgToPdf, text="pdfに変換", command=self.change_pdf)
+        button_change_pdf_frame_imgToPdf.pack()
         
     def change_imgToPdf(self):
         self.clear_imgpath()
@@ -40,7 +43,10 @@ class ImgToPdf:
         self.filenames = []
         self.img_label["text"] = str(len(self.filenames))+"個の画像を選択"
     
-    #def change_pdf(self):
+    def change_pdf(self):
+        pdf_name = self.pdf_name_enrty.get() + ".pdf"
+        pdf_folder = filedialog.askdirectory() + "/"
+        tools.imgToPdf.ImgToPdf(self.filenames, pdf_folder, pdf_name)
 
 def change_main():
     frame.tkraise()
