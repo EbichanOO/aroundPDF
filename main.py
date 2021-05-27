@@ -9,6 +9,7 @@ class ImgToPdf:
         # アプリフレームの作成と設置
         self.frame_imgToPdf = ttk.Frame(root)
         self.frame_imgToPdf.grid(row=0, column=0, sticky="nsew", pady=20)
+        self.convert_log_strings = ""
     
     def places(self):
         label1_frame_imgToPdf = ttk.Label(self.frame_imgToPdf, text="画像pdf変換")
@@ -30,6 +31,10 @@ class ImgToPdf:
 
         button_change_pdf_frame_imgToPdf = ttk.Button(self.frame_imgToPdf, text="pdfに変換", command=self.change_pdf)
         button_change_pdf_frame_imgToPdf.pack()
+
+        self.convert_log = tk.Text(self.frame_imgToPdf, height=10)
+        self.convert_log.configure(state='disable')
+        self.convert_log.pack()
         
     def change_imgToPdf(self):
         self.clear_imgpath()
@@ -47,6 +52,12 @@ class ImgToPdf:
         pdf_name = self.pdf_name_enrty.get() + ".pdf"
         pdf_folder = filedialog.askdirectory() + "/"
         tools.imgToPdf.ImgToPdf(self.filenames, pdf_folder, pdf_name)
+
+        self.clear_imgpath()
+
+        self.convert_log.configure(state='normal')
+        self.convert_log.insert(tk.END, "made "+pdf_name+"\n  "+pdf_folder+"\n")
+        self.convert_log.configure(state='disable')
 
 def change_main():
     frame.tkraise()
