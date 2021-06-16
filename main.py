@@ -1,6 +1,7 @@
 import tkinter as tk
 import tkinter.ttk as ttk
-from tkinter import filedialog, messagebox
+from tkinter import Text, filedialog, messagebox
+from typing_extensions import IntVar
 
 import tools
 
@@ -32,9 +33,12 @@ class ImgToPdf:
         button_change_pdf_frame_imgToPdf = ttk.Button(self.frame_imgToPdf, text="pdfに変換", command=self.change_pdf)
         button_change_pdf_frame_imgToPdf.pack()
 
-        self.convert_log = tk.Text(self.frame_imgToPdf, height=10)
+        self.convert_log = tk.Text(self.frame_imgToPdf, height=5)
         self.convert_log.configure(state='disable')
         self.convert_log.pack()
+
+        self.pgb = ttk.Progressbar(self.frame_imgToPdf,orient="horizontal",value=0,maximum=100,length=200,mode='determinate')
+        self.pgb.pack()
         
     def change_imgToPdf(self):
         self.clear_imgpath()
@@ -51,8 +55,13 @@ class ImgToPdf:
     def change_pdf(self):
         pdf_name = self.pdf_name_enrty.get() + ".pdf"
         pdf_folder = filedialog.askdirectory() + "/"
+        self.pgb.configure(value=0)
+
         for i in tools.imgToPdf.ImgToPdf(self.filenames, pdf_folder, pdf_name):
-            print(i)
+            self.pgb.configure(value= int(i*100/len(self.filenames)))
+            self.pgb.update()
+        self.pgb.configure(value= 100)
+        self.pgb.update()
 
         self.clear_imgpath()
 
