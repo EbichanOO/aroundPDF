@@ -1,7 +1,7 @@
 import img2pdf
 from PIL import Image
 from . import concatPdf
-import os
+import os, shutil
 
 def ImgToPdf(img_paths_and_name, outpdf_path, outpdf_name):
     imgs = []
@@ -23,3 +23,6 @@ def ImgToPdf(img_paths_and_name, outpdf_path, outpdf_name):
     concatPdf.ConcatPdfSome(pdfs, outpdf_path+outpdf_name)
     for name in pdfs:
         os.remove(name)
+    
+    if(img_paths_and_name[0].split('/')[-2]=="tmp"):
+        shutil.rmtree("/".join(img_paths_and_name[0].split("/")[:-1]))

@@ -10,7 +10,6 @@ import controller
 class ImgToPdf:
     def __init__(self):
         self.filenames = []
-        self.zipname = ""
         # アプリフレームの作成と設置
         self.frame_imgToPdf = ttk.Frame(root)
         self.frame_imgToPdf.grid(row=0, column=0, sticky="nsew")
@@ -56,12 +55,9 @@ class ImgToPdf:
     def get_imgpath(self):
         filenames_tmp = filedialog.askopenfilenames(filetypes = [("","*")])
         if(len(filenames_tmp)==1 and filenames_tmp[0].split('.')[1]=="zip"):
-            self.zipname = filenames_tmp[0]
-            write_log(self.convert_log, self.zipname+"を登録しました。")
             self.filenames = controller.pdfMaker.getFileNameFromZip(filenames_tmp[0])
         else:
             self.filenames = filenames_tmp
-            write_log(self.convert_log, self.filenames[0]+"他"+str(len(self.filenames)-1)+"件の画像を登録しました。")
         self.img_label["text"] = str(len(self.filenames))+"個の画像を選択"
 
     def get_folderpath(self):
