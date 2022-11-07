@@ -12,14 +12,22 @@ class ImgToPdf:
         # アプリフレームの作成と設置
         self.frame_imgToPdf = ttk.Frame(root)
         self.frame_imgToPdf.grid(row=0, column=0, sticky="nsew", pady=20)
+
+        self.back_img = tk.PhotoImage(file='./imgs/back.png')
+        self.back_img = self.back_img.subsample(10,10)
     
     def places(self):
+        # back image
+        
+        back_button = ttk.Button(self.frame_imgToPdf, image=self.back_img, command=change_main)
+
         label1_frame_imgToPdf = ttk.Label(self.frame_imgToPdf, text="画像pdf変換")
         button_get_img_path = button_default(self.frame_imgToPdf, text="画像を選択", command=ITP.get_imgpath)
         button_clear_img_path = button_default(self.frame_imgToPdf, text="画像選択を解除", command=ITP.clear_imgpath)
         button_change_frame_imgToPdf = button_default(self.frame_imgToPdf, text="メインウィンドウに移動", command=change_main)
         self.img_label = ttk.Label(self.frame_imgToPdf, text="0個の画像を選択")
         
+        back_button.pack(side="left", anchor="nw")
         label1_frame_imgToPdf.pack()
         button_get_img_path.pack()
         button_clear_img_path.pack()
@@ -157,14 +165,10 @@ if __name__ == "__main__":
     frame.grid(row=0, column=0, sticky="nsew", pady=20)
 
     # 各種ウィジェットの作成
-    label1_frame = ttk.Label(frame, text="メインウィンドウ", font=normal_font)
-    entry1_frame = ttk.Entry(frame)
     button_change = button_default(frame, text="画像pdf変換", command=ITP.change_imgToPdf)
     butoon_change_concatPdf = button_default(frame, text="pdf結合", command=CPDF.change_concatPdf)
 
     # 各種ウィジェットの設置
-    label1_frame.pack()
-    entry1_frame.pack()
     button_change.pack()
     butoon_change_concatPdf.pack()
 
