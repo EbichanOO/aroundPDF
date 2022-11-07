@@ -18,7 +18,7 @@ class MainMenu():
         self.frames = [self.topMenu.frame, self.frame]
 
     def places(self):
-        #self.topMenu.places()
+        self.topMenu.places()
 
         ITP = ImgToPdf()
         CPDF = ConcatPdf()
@@ -32,13 +32,13 @@ class MainMenu():
         butoon_change_concatPdf.pack()
     
     def change(self):
+        self.places()
         [frame.tkraise() for frame in self.frames]
-        #self.places()
 
     def change_to_imgToPdf(self):
         [frame.destroy() for frame in self.frames]
         ITP = ImgToPdf()
-        ITP.change_imgToPdf()
+        ITP.change()
 
 
 class ImgToPdf:
@@ -82,10 +82,9 @@ class ImgToPdf:
         self.pgb = ttk.Progressbar(self.frame_imgToPdf,orient="horizontal",value=0,maximum=100,length=200,mode='determinate')
         self.pgb.pack()
 
-    def change_imgToPdf(self):
-        #self.clear_imgpath()
-        [name.tkraise() for name in self.frames]
+    def change(self):
         self.places()
+        [name.tkraise() for name in self.frames]
 
     def get_imgpath(self):
         filenames_tmp = filedialog.askopenfilenames(filetypes = [("","*")])
@@ -210,19 +209,22 @@ class TopMenu:
 
         self.img_width = 5*self.frame_height
         self.img_height = self.frame_height
-        self.logo_img = tk.PhotoImage(file='./imgs/my-toolkit-logo.png', width=self.img_width, height=self.frame_height) #size 500 100
+        self.logo_img = tk.PhotoImage(file='./imgs/my-toolkit-logo.png', width=500, height=100)
+        self.logo_img = self.logo_img.subsample(5,5)
 
         self.canvas = tk.Canvas(self.frame, width=self.img_width, height=self.frame_height)
-        #self.logo_img = self.logo_img.subsample(4,4)
 
     def places(self):
         self.frame.grid(column=0,row=0)
         self.canvas.pack()
         # キャンバスにイメージを表示
         self.canvas.create_image(0, 0, image=self.logo_img, anchor=tkinter.NW)
-        self.canvas.bind('go top', change_main)
-        #logo = tk.Button(self.frame, image=self.logo_img, command=change_main)
-        #logo.pack()
+
+        self.canvas.bind('<Button-1>', self.changeToMain)
+    
+    def changeToMain(self, event):
+        mainMenu = MainMenu()
+        mainMenu.change()
 
 if __name__ == "__main__":
     root = tk.Tk()
@@ -242,8 +244,6 @@ if __name__ == "__main__":
     root.configure(bg=main_color) # background color
 
     MAINMENU = MainMenu()
-
-    MAINMENU.places()
 
     MAINMENU.change()
 
