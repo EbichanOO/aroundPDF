@@ -18,7 +18,7 @@ class MainMenu():
         self.frames = [self.topMenu.frame, self.frame]
 
     def places(self):
-        self.topMenu.places()
+        #self.topMenu.places()
 
         ITP = ImgToPdf()
         CPDF = ConcatPdf()
@@ -33,7 +33,7 @@ class MainMenu():
     
     def change(self):
         [frame.tkraise() for frame in self.frames]
-        self.places()
+        #self.places()
 
     def change_to_imgToPdf(self):
         [frame.destroy() for frame in self.frames]
