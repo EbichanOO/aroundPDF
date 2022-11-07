@@ -15,9 +15,9 @@ class ImgToPdf:
     
     def places(self):
         label1_frame_imgToPdf = ttk.Label(self.frame_imgToPdf, text="画像pdf変換")
-        button_get_img_path = ttk.Button(self.frame_imgToPdf, text="画像を選択", style="default.TButton", command=ITP.get_imgpath)
-        button_clear_img_path = ttk.Button(self.frame_imgToPdf, text="画像選択を解除", style="default.TButton", command=ITP.clear_imgpath)
-        button_change_frame_imgToPdf = ttk.Button(self.frame_imgToPdf, text="メインウィンドウに移動", style="default.TButton", command=change_main)
+        button_get_img_path = button_default(self.frame_imgToPdf, text="画像を選択", command=ITP.get_imgpath)
+        button_clear_img_path = button_default(self.frame_imgToPdf, text="画像選択を解除", command=ITP.clear_imgpath)
+        button_change_frame_imgToPdf = button_default(self.frame_imgToPdf, text="メインウィンドウに移動", command=change_main)
         self.img_label = ttk.Label(self.frame_imgToPdf, text="0個の画像を選択")
         
         label1_frame_imgToPdf.pack()
@@ -31,7 +31,7 @@ class ImgToPdf:
         self.pdf_name_enrty.insert(tk.END,'pdfの名前を入力')
         self.pdf_name_enrty.pack()
 
-        button_change_pdf_frame_imgToPdf = ttk.Button(self.frame_imgToPdf, text="pdfに変換", style="default.TButton", command=self.change_pdf)
+        button_change_pdf_frame_imgToPdf = button_default(self.frame_imgToPdf, text="pdfに変換", command=self.change_pdf)
         button_change_pdf_frame_imgToPdf.pack()
 
         self.convert_log = tk.Text(self.frame_imgToPdf, height=5)
@@ -79,9 +79,9 @@ class ConcatPdf:
     
     def places(self):
         label1_frame_concatPdf = ttk.Label(self.frame_concatPdf, text="pdf結合")
-        button_get_pdf_path = ttk.Button(self.frame_concatPdf, text="pdfを選択", style="default.TButton", command=self.get_pdfpath)
-        button_clear_pdf_path = ttk.Button(self.frame_concatPdf, text="pdf選択を解除", style="default.TButton", command=self.clear_pdfpath)
-        button_change_frame_concatPdf = ttk.Button(self.frame_concatPdf, text="メインウィンドウに移動", style="default.TButton", command=change_main)
+        button_get_pdf_path = button_default(self.frame_concatPdf, text="pdfを選択", command=self.get_pdfpath)
+        button_clear_pdf_path = button_default(self.frame_concatPdf, text="pdf選択を解除", command=self.clear_pdfpath)
+        button_change_frame_concatPdf = button_default(self.frame_concatPdf, text="メインウィンドウに移動", command=change_main)
         self.pdf_label = ttk.Label(self.frame_concatPdf, text="0個のpdfを選択")
         
         label1_frame_concatPdf.pack()
@@ -95,7 +95,7 @@ class ConcatPdf:
         self.pdf_name_enrty.insert(tk.END,'出力pdfの名前を入力')
         self.pdf_name_enrty.pack()
 
-        button_change_pdf_frame_concatPdf = ttk.Button(self.frame_concatPdf, text="結合", command=self.change_pdf)
+        button_change_pdf_frame_concatPdf = button_default(self.frame_concatPdf, text="結合", command=self.change_pdf)
         button_change_pdf_frame_concatPdf.pack()
 
         self.convert_log = tk.Text(self.frame_concatPdf, height=10)
@@ -129,6 +129,8 @@ def change_main():
     frame.tkraise()
 
 # components
+def button_default(frame, text, command):
+    return ttk.Button(frame, text=text, style="default.TButton", command=command)
 
 if __name__ == "__main__":
     root = tk.Tk()
@@ -157,8 +159,8 @@ if __name__ == "__main__":
     # 各種ウィジェットの作成
     label1_frame = ttk.Label(frame, text="メインウィンドウ", font=normal_font)
     entry1_frame = ttk.Entry(frame)
-    button_change = ttk.Button(frame, text="画像pdf変換", style="default.TButton", command=ITP.change_imgToPdf)
-    butoon_change_concatPdf = ttk.Button(frame, text="pdf結合", style="default.TButton", command=CPDF.change_concatPdf)
+    button_change = button_default(frame, text="画像pdf変換", command=ITP.change_imgToPdf)
+    butoon_change_concatPdf = button_default(frame, text="pdf結合", command=CPDF.change_concatPdf)
 
     # 各種ウィジェットの設置
     label1_frame.pack()
