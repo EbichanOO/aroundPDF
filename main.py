@@ -91,7 +91,7 @@ class ImgToPdf:
         self.clear_imgpath()
 
         self.convert_log.configure(state='normal')
-        self.convert_log.insert(tk.END, "made "+pdf_name+"\n  "+pdf_folder+"\n")
+        self.convert_log.insert(tk.END, "made "+pdf_name+"\n  "+"for  "+pdf_folder+"\n")
         self.convert_log.configure(state='disable')
 
 class ConcatPdf:
