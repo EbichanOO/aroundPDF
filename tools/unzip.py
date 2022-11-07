@@ -1,5 +1,4 @@
-import shutil, os, re
-from natsort import natsorted
+import shutil
 
 def Unzip(zip_path, out_path):
     shutil.unpack_archive(zip_path, out_path)

@@ -62,14 +62,22 @@ class ImgToPdf:
 
     def get_folderpath(self):
         folder_name = filedialog.askdirectory()
+        if(len(folder_name)==0):
+            write_log(self.convert_log, "フォルダを選択して下さい")
+            return 0
         self.filenames = controller.pdfMaker.getFileNameFromFolder(folder_name)
         self.img_label["text"] = str(len(self.filenames))+"個の画像を選択"
+        if(len(self.filenames)==0):
+            write_log(self.convert_log, folder_name+"には画像はありませんでした")
 
     def clear_imgpath(self):
         self.filenames = []
         self.img_label["text"] = str(len(self.filenames))+"個の画像を選択"
     
     def change_pdf(self):
+        if(self.pdf_name_enrty.get()=="" or len(self.filenames)==0):
+            write_log(self.convert_log, "pdfの名前と変換する画像を設定して下さい")
+            return 0
         pdf_name = self.pdf_name_enrty.get() + ".pdf"
         pdf_folder = filedialog.askdirectory() + "/"
         self.pgb.configure(value=0)
@@ -153,7 +161,7 @@ def button_default(frame, text, command):
 
 def write_log(log_board, text):
     log_board.configure(state='normal')
-    log_board.insert(tk.END, text)
+    log_board.insert(tk.END, text+"\n")
     log_board.configure(state='disable')
 
 if __name__ == "__main__":
