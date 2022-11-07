@@ -10,9 +10,10 @@ import controller
 class ImgToPdf:
     def __init__(self):
         self.filenames = []
+        self.zipname = ""
         # アプリフレームの作成と設置
         self.frame_imgToPdf = ttk.Frame(root)
-        self.frame_imgToPdf.grid(row=0, column=0, sticky="nsew", pady=20)
+        self.frame_imgToPdf.grid(row=0, column=0, sticky="nsew")
 
         self.back_img = tk.PhotoImage(file='./imgs/back.png')
         self.back_img = self.back_img.subsample(10,10)
@@ -25,14 +26,12 @@ class ImgToPdf:
         label1_frame_imgToPdf = ttk.Label(self.frame_imgToPdf, text="画像pdf変換")
         button_get_folder_path = button_default(self.frame_imgToPdf, text="フォルダで一括選択", command=ITP.get_folderpath)
         button_get_img_path = button_default(self.frame_imgToPdf, text="画像またはzipファイルを選択", command=ITP.get_imgpath)
-        button_clear_img_path = button_default(self.frame_imgToPdf, text="画像選択を解除", command=ITP.clear_imgpath)
         self.img_label = ttk.Label(self.frame_imgToPdf, text="0個の画像を選択")
         
         back_button.pack(side="left", anchor="nw")
         label1_frame_imgToPdf.pack()
         button_get_folder_path.pack()
         button_get_img_path.pack()
-        button_clear_img_path.pack()
 
         self.img_label.pack()
 
@@ -57,7 +56,12 @@ class ImgToPdf:
     def get_imgpath(self):
         filenames_tmp = filedialog.askopenfilenames(filetypes = [("","*")])
         if(len(filenames_tmp)==1 and filenames_tmp[0].split('.')[1]=="zip"):
+            self.zipname = filenames_tmp[0]
+            write_log(self.convert_log, self.zipname+"を登録しました。")
             self.filenames = controller.pdfMaker.getFileNameFromZip(filenames_tmp[0])
+        else:
+            self.filenames = filenames_tmp
+            write_log(self.convert_log, self.filenames[0]+"他"+str(len(self.filenames)-1)+"件の画像を登録しました。")
         self.img_label["text"] = str(len(self.filenames))+"個の画像を選択"
 
     def get_folderpath(self):
@@ -91,19 +95,22 @@ class ConcatPdf:
         self.filenames = []
         # アプリフレームの作成と設置
         self.frame_concatPdf = ttk.Frame(root)
-        self.frame_concatPdf.grid(row=0, column=0, sticky="nsew", pady=20)
-    
+        self.frame_concatPdf.grid(row=0, column=0, sticky="nsew")
+
+        self.back_img = tk.PhotoImage(file='./imgs/back.png')
+        self.back_img = self.back_img.subsample(10,10)
+
     def places(self):
+        back_button = ttk.Button(self.frame_concatPdf, image=self.back_img, command=change_main)
+        
         label1_frame_concatPdf = ttk.Label(self.frame_concatPdf, text="pdf結合")
         button_get_pdf_path = button_default(self.frame_concatPdf, text="pdfを選択", command=self.get_pdfpath)
-        button_clear_pdf_path = button_default(self.frame_concatPdf, text="pdf選択を解除", command=self.clear_pdfpath)
-        button_change_frame_concatPdf = button_default(self.frame_concatPdf, text="メインウィンドウに移動", command=change_main)
         self.pdf_label = ttk.Label(self.frame_concatPdf, text="0個のpdfを選択")
         
+        back_button.pack(side="left", anchor="nw")
+
         label1_frame_concatPdf.pack()
         button_get_pdf_path.pack()
-        button_clear_pdf_path.pack()
-        button_change_frame_concatPdf.pack()
 
         self.pdf_label.pack()
 
@@ -148,6 +155,11 @@ def change_main():
 def button_default(frame, text, command):
     return ttk.Button(frame, text=text, style="default.TButton", command=command)
 
+def write_log(log_board, text):
+    log_board.configure(state='normal')
+    log_board.insert(tk.END, text)
+    log_board.configure(state='disable')
+
 if __name__ == "__main__":
     root = tk.Tk()
     global main_color, normal_font
@@ -170,7 +182,7 @@ if __name__ == "__main__":
 
     # メインフレームの作成と設置
     frame = ttk.Frame(root)
-    frame.grid(row=0, column=0, sticky="nsew", pady=20)
+    frame.grid(row=0, column=0, sticky="nsew")
 
     # 各種ウィジェットの作成
     button_change = button_default(frame, text="画像pdf変換", command=ITP.change_imgToPdf)
