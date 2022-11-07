@@ -5,6 +5,7 @@ from tkinter import Text, filedialog, messagebox
 from typing_extensions import IntVar
 
 import tools
+import controller
 
 class ImgToPdf:
     def __init__(self):
@@ -22,16 +23,16 @@ class ImgToPdf:
         back_button = ttk.Button(self.frame_imgToPdf, image=self.back_img, command=change_main)
 
         label1_frame_imgToPdf = ttk.Label(self.frame_imgToPdf, text="画像pdf変換")
-        button_get_img_path = button_default(self.frame_imgToPdf, text="画像を選択", command=ITP.get_imgpath)
+        button_get_folder_path = button_default(self.frame_imgToPdf, text="フォルダで一括選択", command=ITP.get_folderpath)
+        button_get_img_path = button_default(self.frame_imgToPdf, text="画像またはzipファイルを選択", command=ITP.get_imgpath)
         button_clear_img_path = button_default(self.frame_imgToPdf, text="画像選択を解除", command=ITP.clear_imgpath)
-        button_change_frame_imgToPdf = button_default(self.frame_imgToPdf, text="メインウィンドウに移動", command=change_main)
         self.img_label = ttk.Label(self.frame_imgToPdf, text="0個の画像を選択")
         
         back_button.pack(side="left", anchor="nw")
         label1_frame_imgToPdf.pack()
+        button_get_folder_path.pack()
         button_get_img_path.pack()
         button_clear_img_path.pack()
-        button_change_frame_imgToPdf.pack()
 
         self.img_label.pack()
 
@@ -54,7 +55,14 @@ class ImgToPdf:
         self.frame_imgToPdf.tkraise()
 
     def get_imgpath(self):
-        self.filenames = filedialog.askopenfilenames(filetypes = [("","*")])
+        filenames_tmp = filedialog.askopenfilenames(filetypes = [("","*")])
+        if(len(filenames_tmp)==1 and filenames_tmp[0].split('.')[1]=="zip"):
+            self.filenames = controller.pdfMaker.getFileNameFromZip(filenames_tmp[0])
+        self.img_label["text"] = str(len(self.filenames))+"個の画像を選択"
+
+    def get_folderpath(self):
+        folder_name = filedialog.askdirectory()
+        self.filenames = controller.pdfMaker.getFileNameFromFolder(folder_name)
         self.img_label["text"] = str(len(self.filenames))+"個の画像を選択"
 
     def clear_imgpath(self):

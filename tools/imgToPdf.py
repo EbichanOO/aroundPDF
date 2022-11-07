@@ -23,7 +23,3 @@ def ImgToPdf(img_paths_and_name, outpdf_path, outpdf_name):
     concatPdf.ConcatPdfSome(pdfs, outpdf_path+outpdf_name)
     for name in pdfs:
         os.remove(name)
-    
-
-if __name__ == '__main__':
-    ImgToPdf(["./tmps/","./tmps/"], ["imgsample1.JPG","imgsample2.JPG"], "./tmps/", "test.pdf")
