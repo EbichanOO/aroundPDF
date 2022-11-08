@@ -33,14 +33,14 @@ class ImgToPdf:
     def __init__(self):
         self.filenames = []
         # アプリフレームの作成と設置
-        self.frame_imgToPdf = tk.Frame(appBody, width=width, height=height-20, bg=main_color)
-        self.frame_imgToPdf.propagate(False)
-        self.frame_imgToPdf.place(x=0,y=0)
+        self.frame = tk.Frame(appBody, width=width, height=height-20, bg=main_color)
+        self.frame.propagate(False)
+        self.frame.place(x=0,y=0)
 
-        label1_frame_imgToPdf = ttk.Label(self.frame_imgToPdf, text="画像pdf変換")
-        button_get_folder_path = button_default(self.frame_imgToPdf, text="フォルダで一括選択", command=self.get_folderpath)
-        button_get_img_path = button_default(self.frame_imgToPdf, text="画像またはzipファイルを選択", command=self.get_imgpath)
-        self.img_label = ttk.Label(self.frame_imgToPdf, text="0個の画像を選択")
+        label1_frame_imgToPdf = ttk.Label(self.frame, text="画像pdf変換")
+        button_get_folder_path = button_default(self.frame, text="フォルダで一括選択", command=self.get_folderpath)
+        button_get_img_path = button_default(self.frame, text="画像またはzipファイルを選択", command=self.get_imgpath)
+        self.img_label = ttk.Label(self.frame, text="0個の画像を選択")
         
         label1_frame_imgToPdf.pack()
         button_get_folder_path.pack()
@@ -48,22 +48,22 @@ class ImgToPdf:
 
         self.img_label.pack()
 
-        self.pdf_name_enrty = tk.Entry(self.frame_imgToPdf)
+        self.pdf_name_enrty = tk.Entry(self.frame)
         self.pdf_name_enrty.insert(tk.END,'pdfの名前を入力')
         self.pdf_name_enrty.pack()
 
-        button_change_pdf_frame_imgToPdf = button_default(self.frame_imgToPdf, text="pdfに変換", command=self.change_pdf)
+        button_change_pdf_frame_imgToPdf = button_default(self.frame, text="pdfに変換", command=self.change_pdf)
         button_change_pdf_frame_imgToPdf.pack()
 
-        self.convert_log = tk.Text(self.frame_imgToPdf, height=5)
+        self.convert_log = tk.Text(self.frame, height=5)
         self.convert_log.configure(state='disable')
         self.convert_log.pack()
 
-        self.pgb = ttk.Progressbar(self.frame_imgToPdf,orient="horizontal",value=0,maximum=100,length=200,mode='determinate')
+        self.pgb = ttk.Progressbar(self.frame,orient="horizontal",value=0,maximum=100,length=200,mode='determinate')
         self.pgb.pack()
 
     def getFrame(self):
-        return self.frame_imgToPdf
+        return self.frame
 
     def get_imgpath(self):
         filenames_tmp = filedialog.askopenfilenames(filetypes = [("","*")])
@@ -111,36 +111,36 @@ class ConcatPdf:
     def __init__(self):
         self.filenames = []
         # アプリフレームの作成と設置
-        self.frame_concatPdf = tk.Frame(appBody, width=width, height=height-20, bg=main_color)
-        self.frame_concatPdf.propagate(False)
-        self.frame_concatPdf.place(x=0,y=0)
+        self.frame = tk.Frame(appBody, width=width, height=height-20, bg=main_color)
+        self.frame.propagate(False)
+        self.frame.place(x=0,y=0)
         
-        label1_frame_concatPdf = ttk.Label(self.frame_concatPdf, text="pdf結合")
-        button_get_pdf_path = button_default(self.frame_concatPdf, text="pdfを選択", command=self.get_pdfpath)
-        self.pdf_label = ttk.Label(self.frame_concatPdf, text="0個のpdfを選択")
+        label1_frame_concatPdf = ttk.Label(self.frame, text="pdf結合")
+        button_get_pdf_path = button_default(self.frame, text="pdfを選択", command=self.get_pdfpath)
+        self.pdf_label = ttk.Label(self.frame, text="0個のpdfを選択")
 
         label1_frame_concatPdf.pack()
         button_get_pdf_path.pack()
 
         self.pdf_label.pack()
 
-        self.pdf_name_enrty = tk.Entry(self.frame_concatPdf)
+        self.pdf_name_enrty = tk.Entry(self.frame)
         self.pdf_name_enrty.insert(tk.END,'出力pdfの名前を入力')
         self.pdf_name_enrty.pack()
 
-        button_change_pdf_frame_concatPdf = button_default(self.frame_concatPdf, text="結合", command=self.change_pdf)
+        button_change_pdf_frame_concatPdf = button_default(self.frame, text="結合", command=self.change_pdf)
         button_change_pdf_frame_concatPdf.pack()
 
-        self.convert_log = tk.Text(self.frame_concatPdf, height=10)
+        self.convert_log = tk.Text(self.frame, height=10)
         self.convert_log.configure(state='disable')
         self.convert_log.pack()
     
     def getFrame(self):
-        return self.frame_concatPdf
+        return self.frame
         
     def change_concatPdf(self):
         self.clear_pdfpath()
-        self.frame_concatPdf.tkraise()
+        self.frame.tkraise()
 
     def get_pdfpath(self):
         self.filenames = filedialog.askopenfilenames(filetypes = [("","*")])
