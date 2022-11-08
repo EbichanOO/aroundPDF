@@ -12,14 +12,15 @@ height = 300
 
 class MainMenu:
     def __init__(self):
-        self.frame = ttk.Frame(appBody)
-        self.frame.grid(row=0, column=0, sticky="nsew")
+        self.frame = tk.Frame(appBody, width=width, height=height-20, bg=main_color)
+        self.frame.propagate(False)
+        self.frame.place(x=0,y=0)
 
         #CPDF = ConcatPdf()
 
         # 各種ウィジェットの作成
         button_change = button_default(self.frame, text="画像pdf変換", command=lambda:change("itp"))
-        butoon_change_concatPdf = button_default(self.frame, text="pdf結合", command=lambda:change("itp"))
+        butoon_change_concatPdf = button_default(self.frame, text="pdf結合", command=lambda:change("cp"))
 
         # 各種ウィジェットの設置
         button_change.pack()
@@ -28,13 +29,13 @@ class MainMenu:
     def getFrame(self):
         return self.frame
 
-
 class ImgToPdf:
     def __init__(self):
         self.filenames = []
         # アプリフレームの作成と設置
-        self.frame_imgToPdf = ttk.Frame(appBody)
-        self.frame_imgToPdf.grid(row=0, column=0, sticky="nsew")
+        self.frame_imgToPdf = tk.Frame(appBody, width=width, height=height-20, bg=main_color)
+        self.frame_imgToPdf.propagate(False)
+        self.frame_imgToPdf.place(x=0,y=0)
 
         label1_frame_imgToPdf = ttk.Label(self.frame_imgToPdf, text="画像pdf変換")
         button_get_folder_path = button_default(self.frame_imgToPdf, text="フォルダで一括選択", command=self.get_folderpath)
@@ -110,20 +111,13 @@ class ConcatPdf:
     def __init__(self):
         self.filenames = []
         # アプリフレームの作成と設置
-        self.frame_concatPdf = ttk.Frame(root)
-        self.frame_concatPdf.grid(row=0, column=0, sticky="nsew")
-
-        self.back_img = tk.PhotoImage(file='./imgs/back.png')
-        self.back_img = self.back_img.subsample(10,10)
-
-    def places(self):
-        back_button = ttk.Button(self.frame_concatPdf, image=self.back_img, command=change_main)
+        self.frame_concatPdf = tk.Frame(appBody, width=width, height=height-20, bg=main_color)
+        self.frame_concatPdf.propagate(False)
+        self.frame_concatPdf.place(x=0,y=0)
         
         label1_frame_concatPdf = ttk.Label(self.frame_concatPdf, text="pdf結合")
         button_get_pdf_path = button_default(self.frame_concatPdf, text="pdfを選択", command=self.get_pdfpath)
         self.pdf_label = ttk.Label(self.frame_concatPdf, text="0個のpdfを選択")
-        
-        back_button.pack(side="left", anchor="nw")
 
         label1_frame_concatPdf.pack()
         button_get_pdf_path.pack()
@@ -140,6 +134,9 @@ class ConcatPdf:
         self.convert_log = tk.Text(self.frame_concatPdf, height=10)
         self.convert_log.configure(state='disable')
         self.convert_log.pack()
+    
+    def getFrame(self):
+        return self.frame_concatPdf
         
     def change_concatPdf(self):
         self.clear_pdfpath()
@@ -175,24 +172,23 @@ def write_log(log_board, text):
 
 class TopMenu:
     def __init__(self):
-        self.frame_height = int(height/5)
+        self.frame_height = 20
         self.frame_width = width
 
         self.frame = tk.Frame(root, width=width, height=self.frame_height)
-        self.style = ttk.Style()
-        self.style.configure("topMenu.TButton")
+        self.frame.propagate(False)
+        self.frame.pack()
 
-        self.img_width = 5*self.frame_height
-        self.img_height = self.frame_height
+        img_width = 500/5
+        img_height = 100/5
         self.logo_img = tk.PhotoImage(file='./imgs/my-toolkit-logo.png', width=500, height=100)
         self.logo_img = self.logo_img.subsample(5,5)
 
-        self.canvas = tk.Canvas(self.frame, width=self.img_width, height=self.frame_height)
-
-        self.frame.grid(column=0,row=0)
-        self.canvas.pack()
+        self.canvas = tk.Canvas(self.frame, width=img_width, height=img_height)
         # キャンバスにイメージを表示
         self.canvas.create_image(0, 0, image=self.logo_img, anchor=tkinter.NW)
+        # キャンパスの配置
+        self.canvas.pack()
 
         self.canvas.bind('<Button-1>', self.changeToMain)
     
@@ -225,14 +221,18 @@ if __name__ == "__main__":
     header = TopMenu()
     header.getFrame().tkraise()
 
-    appBody = ttk.Frame(root, width=width, height=height)
-    appBody.grid(row=1, column=0, sticky="nsew")
+    appBody = ttk.Frame(root, width=width, height=height-20)
+    # ウェッジのサイズに応じて伸び縮みしない
+    appBody.propagate(False)
+    appBody.pack()
 
     mainpage = MainMenu()
     itppage = ImgToPdf()
+    cppage = ConcatPdf()
     router = {
         'main': mainpage.getFrame(),
-        'itp': itppage.getFrame()
+        'itp': itppage.getFrame(),
+        'cp': cppage.getFrame()
     }
 
     change('main')
