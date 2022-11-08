@@ -89,6 +89,10 @@ class ImgToPdf(TEMPLATEAPP):
     def clear_imgpath(self):
         self.filenames = []
         self.img_label["text"] = str(len(self.filenames))+"個の画像を選択"
+
+    def initPdfName(self):
+        self.pdf_name_enrty.delete(0, tk.END)
+        self.pdf_name_enrty.insert(tk.END, "pdfの名前を入力")
     
     def change_pdf(self):
         if(self.pdf_name_enrty.get()=="" or len(self.filenames)==0):
@@ -105,6 +109,7 @@ class ImgToPdf(TEMPLATEAPP):
         self.pgb.update()
 
         self.clear_imgpath()
+        self.initPdfName()
 
         self.convert_log.configure(state='normal')
         self.convert_log.insert(tk.END, "made "+pdf_name+"\n  "+"for  "+pdf_folder+"\n")
@@ -148,12 +153,17 @@ class ConcatPdf(TEMPLATEAPP):
         self.filenames = []
         self.pdf_label["text"] = str(len(self.filenames))+"個のpdfを選択"
     
+    def initPdfName(self):
+        self.pdf_name_enrty.delete(0, tk.END)
+        self.pdf_name_enrty.insert(tk.END, "pdfの名前を入力")
+    
     def change_pdf(self):
         pdf_name = self.pdf_name_enrty.get() + ".pdf"
         pdf_folder = filedialog.askdirectory() + "/"
         tools.concatPdf.ConcatPdfSome(self.filenames, pdf_folder+pdf_name)
 
         self.clear_pdfpath()
+        self.initPdfName()
 
         self.convert_log.configure(state='normal')
         self.convert_log.insert(tk.END, "made "+pdf_name+"\n  "+pdf_folder+"\n")
