@@ -41,7 +41,7 @@ class ImgToPdf(TEMPLATEAPP):
 
         self.filenames = []
 
-        label1_frame_imgToPdf = label_default(self.frame, text="画像pdf変換")
+        label1_frame_imgToPdf = label_title(self.frame, text="画像pdf変換")
         button_get_folder_path = button_default(self.frame, text="フォルダで一括選択", command=self.get_folderpath)
         button_get_img_path = button_default(self.frame, text="画像またはzipファイルを選択", command=self.get_imgpath)
         self.img_label = label_default(self.frame, text="0個の画像を選択")
@@ -63,12 +63,7 @@ class ImgToPdf(TEMPLATEAPP):
         button_change_pdf_frame_imgToPdf = button_default(entryFrame, text="pdfに変換", command=self.change_pdf)
         button_change_pdf_frame_imgToPdf.pack(side="left")
 
-        self.convert_log = tk.Text(self.frame, height=5)
-        self.convert_log.configure(state='disable')
-        self.convert_log.pack()
-
-        self.pgb = ttk.Progressbar(self.frame,orient="horizontal",value=0,maximum=100,length=200,mode='determinate')
-        self.pgb.pack()
+        self.convert_log, self.pgb = convertLogAndConvertProgressBar(self.frame)
     
     def init_vals(self):
         self.clear_imgpath()
@@ -120,7 +115,7 @@ class ConcatPdf(TEMPLATEAPP):
         super().__init__()
         self.filenames = []
         
-        label1_frame_concatPdf = label_default(self.frame, text="pdf結合")
+        label1_frame_concatPdf = label_title(self.frame, text="pdf結合")
         button_get_pdf_path = button_default(self.frame, text="pdfを選択", command=self.get_pdfpath)
         self.pdf_label = label_default(self.frame, text="0個のpdfを選択")
 
@@ -129,16 +124,18 @@ class ConcatPdf(TEMPLATEAPP):
 
         self.pdf_label.pack()
 
-        self.pdf_name_enrty = tk.Entry(self.frame)
+        entryFrame = tk.Frame(self.frame, width=width)
+        entryFrame.pack()
+        self.frameList.append(entryFrame)
+
+        self.pdf_name_enrty = tk.Entry(entryFrame)
         self.pdf_name_enrty.insert(tk.END,'出力pdfの名前を入力')
-        self.pdf_name_enrty.pack()
+        self.pdf_name_enrty.pack(side="left", fill="x")
 
-        button_change_pdf_frame_concatPdf = button_default(self.frame, text="結合", command=self.change_pdf)
-        button_change_pdf_frame_concatPdf.pack()
+        button_change_pdf_frame_concatPdf = button_default(entryFrame, text="結合", command=self.change_pdf)
+        button_change_pdf_frame_concatPdf.pack(side="left")
 
-        self.convert_log = tk.Text(self.frame, height=10)
-        self.convert_log.configure(state='disable')
-        self.convert_log.pack()
+        self.convert_log, self.pgb = convertLogAndConvertProgressBar(self.frame)
     
     def init_vals(self):
         self.clear_pdfpath()
@@ -168,6 +165,18 @@ def button_default(frame, text, command):
 
 def label_default(frame, text):
     return ttk.Label(frame, text=text, style="default.TLabel", background=main_color)
+
+def label_title(frame, text):
+    return ttk.Label(frame, text=text, style="title.TLabel", background=main_color)
+
+def convertLogAndConvertProgressBar(frame):
+    pgb = ttk.Progressbar(frame,orient="horizontal",value=0,maximum=100,length=200,mode='determinate')
+    pgb.pack(side="bottom", pady=5)
+
+    convert_log = tk.Text(frame, height=5)
+    convert_log.configure(state='disable')
+    convert_log.pack(side="bottom")
+    return convert_log, pgb
 
 def write_log(log_board, text):
     log_board.configure(state='normal')
@@ -217,6 +226,7 @@ if __name__ == "__main__":
     style = ttk.Style()
     style.configure("default.TButton", font=(normal_font))
     style.configure("default.TLabel",font=(normal_font, 10))
+    style.configure("title.TLabel",font=(normal_font, 15))
 
     # rootメインウィンドウの設定
     root.title("toolkit")
