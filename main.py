@@ -10,52 +10,31 @@ import controller
 width = 300
 height = 300
 
-class MainMenu():
+class MainMenu:
     def __init__(self):
-        self.topMenu = TopMenu(root)
-        self.frame = ttk.Frame(root)
-        self.frame.grid(row=1, column=0, sticky="nsew")
-        self.frames = [self.topMenu.frame, self.frame]
+        self.frame = ttk.Frame(appBody)
+        self.frame.grid(row=0, column=0, sticky="nsew")
 
-    def places(self):
-        self.topMenu.places()
-
-        ITP = ImgToPdf()
-        CPDF = ConcatPdf()
+        #CPDF = ConcatPdf()
 
         # 各種ウィジェットの作成
-        button_change = button_default(self.frame, text="画像pdf変換", command=self.change_to_imgToPdf)
-        butoon_change_concatPdf = button_default(self.frame, text="pdf結合", command=CPDF.change_concatPdf)
+        button_change = button_default(self.frame, text="画像pdf変換", command=lambda:change("itp"))
+        butoon_change_concatPdf = button_default(self.frame, text="pdf結合", command=lambda:change("itp"))
 
         # 各種ウィジェットの設置
         button_change.pack()
         butoon_change_concatPdf.pack()
     
-    def change(self):
-        self.places()
-        [frame.tkraise() for frame in self.frames]
-
-    def change_to_imgToPdf(self):
-        [frame.destroy() for frame in self.frames]
-        ITP = ImgToPdf()
-        ITP.change()
+    def getFrame(self):
+        return self.frame
 
 
 class ImgToPdf:
     def __init__(self):
         self.filenames = []
         # アプリフレームの作成と設置
-        self.frame_imgToPdf = ttk.Frame(root)
-        self.frame_imgToPdf.grid(row=1, column=0, sticky="nsew")
-
-        self.top_menu = TopMenu(root)
-
-        self.frames = [self.frame_imgToPdf, self.top_menu.frame]
-    
-    def places(self):
-        # back image
-        
-        self.top_menu.places()
+        self.frame_imgToPdf = ttk.Frame(appBody)
+        self.frame_imgToPdf.grid(row=0, column=0, sticky="nsew")
 
         label1_frame_imgToPdf = ttk.Label(self.frame_imgToPdf, text="画像pdf変換")
         button_get_folder_path = button_default(self.frame_imgToPdf, text="フォルダで一括選択", command=self.get_folderpath)
@@ -82,9 +61,8 @@ class ImgToPdf:
         self.pgb = ttk.Progressbar(self.frame_imgToPdf,orient="horizontal",value=0,maximum=100,length=200,mode='determinate')
         self.pgb.pack()
 
-    def change(self):
-        self.places()
-        [name.tkraise() for name in self.frames]
+    def getFrame(self):
+        return self.frame_imgToPdf
 
     def get_imgpath(self):
         filenames_tmp = filedialog.askopenfilenames(filetypes = [("","*")])
@@ -186,9 +164,6 @@ class ConcatPdf:
         self.convert_log.insert(tk.END, "made "+pdf_name+"\n  "+pdf_folder+"\n")
         self.convert_log.configure(state='disable')
 
-def change_main():
-    frame.tkraise()
-
 # components
 def button_default(frame, text, command):
     return ttk.Button(frame, text=text, style="default.TButton", command=command)
@@ -199,11 +174,11 @@ def write_log(log_board, text):
     log_board.configure(state='disable')
 
 class TopMenu:
-    def __init__(self, parentFrame):
+    def __init__(self):
         self.frame_height = int(height/5)
         self.frame_width = width
 
-        self.frame = tk.Frame(parentFrame, width=width, height=self.frame_height)
+        self.frame = tk.Frame(root, width=width, height=self.frame_height)
         self.style = ttk.Style()
         self.style.configure("topMenu.TButton")
 
@@ -214,7 +189,6 @@ class TopMenu:
 
         self.canvas = tk.Canvas(self.frame, width=self.img_width, height=self.frame_height)
 
-    def places(self):
         self.frame.grid(column=0,row=0)
         self.canvas.pack()
         # キャンバスにイメージを表示
@@ -222,9 +196,14 @@ class TopMenu:
 
         self.canvas.bind('<Button-1>', self.changeToMain)
     
+    def getFrame(self):
+        return self.frame
+
     def changeToMain(self, event):
-        mainMenu = MainMenu()
-        mainMenu.change()
+        change("main")
+
+def change(changeName):
+    router[changeName].tkraise()
 
 if __name__ == "__main__":
     root = tk.Tk()
@@ -243,8 +222,19 @@ if __name__ == "__main__":
     root.grid_columnconfigure(0, weight=1)
     root.configure(bg=main_color) # background color
 
-    MAINMENU = MainMenu()
+    header = TopMenu()
+    header.getFrame().tkraise()
 
-    MAINMENU.change()
+    appBody = ttk.Frame(root, width=width, height=height)
+    appBody.grid(row=1, column=0, sticky="nsew")
+
+    mainpage = MainMenu()
+    itppage = ImgToPdf()
+    router = {
+        'main': mainpage.getFrame(),
+        'itp': itppage.getFrame()
+    }
+
+    change('main')
 
     root.mainloop()
